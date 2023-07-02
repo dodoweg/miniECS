@@ -18,6 +18,7 @@ miniECS.js is a minimal Entity Component System (ECS) library that allows you to
 ## Introduction
 
 miniECS.js provides a simple and efficient way to implement the ECS pattern in your application. It allows you to define entities as a collection of components, each representing a specific aspect or behavior of the entity. Systems then operate on entities based on their component composition, enabling clean separation of concerns and ease of managing complex interactions between entities.
+[View the example](https://dorweg.github.io/miniECS/)
 
 ## Installation
 
