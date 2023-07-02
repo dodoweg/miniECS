@@ -24,7 +24,7 @@ miniECS.js provides a simple and efficient way to implement the ECS pattern in y
 To use miniECS.js in your project, you can include the `miniECS.js` script in your HTML file:
 
 ```html
-<script src="path/to/miniECS.js"></script>
+<script src="https://dorweg.github.io/miniECS/miniECS.js"></script>
 ```
 
 ## Usage
