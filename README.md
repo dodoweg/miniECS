@@ -220,11 +220,11 @@ class ExampleSystem extends System {
 
 ### Updating Systems
 
-To update all registered systems, call the updateSystems method of the `EntityManage`r instance. This will invoke the update method of each registered system, allowing them to process entities.
+To update all registered systems, call the `update()` method of the `EntityManager` instance. This will invoke the update method of each registered system, allowing them to process entities.
 
 ```javascript
 // Update all registered systems
-entityManager.updateSystems(delta, time);
+entityManager.update(delta, time);
 ```
 
 ## Usage Example
