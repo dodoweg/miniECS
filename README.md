@@ -1,11 +1,11 @@
-# miniECS.js - A Minimalist Approach to Entity Component System Library
+﻿# miniECS.js - A Minimalist Approach to Entity Component System Library
 
 miniECS.js is a lightweight and streamlined Entity Component System (ECS) library designed to simplify the management of entities and systems in your JavaScript application. If you're looking for a minimal environment setup with fewer classes and complexities, miniECS.js is the perfect choice.
 
 ## Introduction
 
 miniECS.js allows you to define components that encapsulate specific properties of an entity, such as its transform or physics attributes. These components can then be manipulated efficiently within specific systems, promoting a clear separation of concerns and facilitating the management of intricate interactions between entities.
-To see miniECS.js in action, check out our [example](https://dorweg.github.io/miniECS/). I took inspiration from the [ECSY](https://github.com/ecsyjs/ecsy) library and rewrote its example using miniECS.js. At the end of the README file, you can find two usage examples that demonstrate the same initial setup using miniECS.js and ECSY.js.
+To see miniECS.js in action, check out the [example](https://dorweg.github.io/miniECS/). I took inspiration from the [ECSY](https://github.com/ecsyjs/ecsy) library and rewrote its example using miniECS.js. At the end of the README file, you can find two usage examples that demonstrate the same initial setup using miniECS.js and ECSY.js.
 
 Here a sample project :
 
@@ -20,50 +20,68 @@ let queries = {
 // System
 class ConsoleSystem extends System {
  update(delta, time) {
-    this.getEntities().forEach((entity) => {
+// Fetch through all entities that got the position component
+    this.getEntities().forEach((entity) => { 
   console.log(entity.position);
     });
   }
 }
-ConsoleSystem.prototype.query = queries.console; // Assign the query 'console' that is a group of 1 component
+ConsoleSystem.prototype.query = queries.console; // Assign the query 'console' that is a group of only one component, position
 
-world.registerSystem(new ConsoleSystem()); // Registering the system
-world.createEntity().assign(position); // Create one entity and assign them the position "components" at the root of entity
+
+// Registering the system
+world.registerSystem(new ConsoleSystem());
+// Create one entity and assign them the position "components" at the root of entity
+world.createEntity().assign(position); 
+
+
 function run() {
   // Compute delta and elapsed time
   var time = performance.now();
   var delta = time - lastTime;
 
+
   // Run all the systems
   world.update(delta, time);
+
 
   lastTime = time;
   requestAnimationFrame(run);
 }
 
+
 var lastTime = performance.now();
 run();
 ```
 
-This example should call a console.log event each frame that get all the entities that have the `position` component according to the behaviour of our `ConsoleSystem`
+
+The `ConsoleSystem` in this example is designed to log the `position` component of entities to the console each frame, ensuring that all entities with the `position` component are accounted for.
 
 ## Installation
 
+
 To use miniECS.js in your project, you can include the `miniECS.js` script in your HTML file:
+
 
 ```html
 <script src="https://dorweg.github.io/miniECS/miniECS.js"></script>
 ```
 
+
 ## Usage
+
 
 miniECS.js provides flexibility in defining components for your entity-component system. You can define components either as functions or as objects, based on your preference and requirements.
 
+
 ### Defining Components as Functions
 
-Functions in miniECS.js serve as groups of components and allow you to encapsulate the properties or behaviors associated with an entity. You can use functions that return component instances with customizable options and default values.
+
+Functions in miniECS.js serve as groups of components and allow you to encapsulate the properties (or behaviors) associated with an entity. You can use functions that return component instances with customizable options and default values.
+
 
 Here's an example of defining a transform component using a function:
+
 
 ```javascript
 function transform(options) {
@@ -74,13 +92,17 @@ function transform(options) {
     rotation: { x: 0, y: 0 }
   };
 
+
   // Compute the transformation properties by merging the provided options with the defaults
   return compute(options, defaults);
 }
-//console.log(transform()); // Output: [{ position: { x: 0, y: 0 } }, { scale: { x: 1, y: 1 } }, { rotation: { x: 0, y: 0 } }]
+//console.log(transform());
+// Output: [{ position: { x: 0, y: 0 } }, { scale: { x: 1, y: 1 } }, { rotation: { x: 0, y: 0 } }]
 ```
 
+
 You can assign the transform component to entities using the `assign()` function:
+
 
 ```javascript
 let world = new EntityManager();
@@ -89,11 +111,15 @@ console.log(world.entities[0].position.y); // Output: 200
 ```
 In this example, the transform function creates a component instance with default transformation properties. The function accepts an options parameter to override the default values when assigning the component to an entity.
 
+
 ### Defining Components as Objects
+
 
 Alternatively, you can define components directly as objects. This approach allows you to assign properties to entities without the need for a function wrapper.
 
+
 Here's an example of defining components as objects:
+
 
 ```javascript
 let position = { position: { x: 0, y: 0 } }; // nested object
@@ -101,21 +127,29 @@ let velocity = { x: 0, y: 0 }; // unnested object
 let shape = { shape: "box" }; // default value for shape components is "box"
 ```
 
+
 You can assign these component objects to entities using the `assign()` method:
+
 
 ```javascript
 world.createEntity().assign(position, { velocity }, { shape: "circle" });
 ```
 
-In this example, we create an entity and assign multiple components to it, including `position`, `velocity`, and `shape`. The components are defined as objects, and you can customize their properties as needed.
+
+In this example, we create an entity and assign multiple components to it, including `position`, `velocity`, and `shape`. The components are defined as nested objects, and you can customize their properties as needed.
+
 
 Using miniECS.js, you have the flexibility to define components either as functions or as objects, allowing you to structure your entity-component system according to your needs.
 
+
 ### Assigning Components to Entities
 
-To assign components to an existing entity, you can use the `assign(...components)` method of the entity. This method allows you to associate various (infinity) components with the entity by passing them as nested objects.
+
+To assign components to an existing entity, you can use the `assign(...components)` method of the `Entity` class. This method allows you to associate various components with the entity by passing them as nested objects.
+
 
 Here's an example that demonstrates the usage of the `assign()` method:
+
 
 ```javascript
 // World initialization
@@ -126,9 +160,12 @@ let entity = world.createEntity();
 entity.assign({ position: { x: 50, y: 100 } });
 ```
 
+
 In this example, we create a new entity using the `createEntity()` method provided by EntityManager. Then, we use the `assign()` method to associate a position component with the entity. The position component is defined as a nested object with x and y properties.
 
+
 You can assign multiple components to an entity using different types of nested objects, as shown in this example:
+
 
 ```javascript
 // World initialization
@@ -141,13 +178,18 @@ let shape = { shape: "box" };
 world.createEntity().assign(position, { velocity }, { shape: "circle" });
 ```
 
+
 In this example, we create a new entity using the `createEntity()` method of the world object. We pass three components to the `assign()` method: `position`, `velocity`, and `shape`. The position component is nested within an object, while the velocity component is passed and nested directly in the `assign()` function. The shape component is a modified object from the default one and needs to be nested within the `assign()` method.
+
 
 By using the `assign()` method in this way, the entity will have the assigned components (position, velocity, and shape) accessible as properties in its root, allowing you to work with these components in your application.
 
+
 ### Component Queries for Systems
 
-miniECS.js allows you to define queries to retrieve entities based on specific component requirements. These queries can be used by systems to operate on entities that match the specified criteria. For example, you can define a query called "movable" that requires the "position" and "velocity" components:
+
+miniECS.js allows you to define queries to retrieve entities based on specific component requirements. These queries can be used by systems to operate on entities that match the specified criteria. For example, you can define a query called `movable` that requires the `position` and `velocity` components, and a `renderable` query that requires the `shape` component :
+
 
 ```javascript
 let queries = {
@@ -155,22 +197,29 @@ let queries = {
   renderable: ["shape"],
 };
 ```
-To use this query, you can assign it to your system's prototype, like this:
+To use these queries, you can assign it to your system's prototype, like this:
+
 
 ```javascript
 MovableSystem.prototype.query = queries.movable;
 RendererSystem.prototype.query = queries.renderable;
 ```
 
+
 By assigning the query to your system's prototype, your `MovableSystem` will only operate on entities that have both the `position` and `velocity` components, while the `RendererSystem` will operate on entities that have the `shape` component.
+
 
 Using component queries in miniECS.js allows you to easily filter and work with entities that have specific components, making it more efficient to handle entity-component relationships in your system.
 
+
 ### Registering Systems
+
 
 miniECS.js allows you to register systems that operate on entities based on their component composition. Systems define the logic and behavior that manipulate entities and can be updated on each frame of your application.
 
+
 To register a system in miniECS.js, you'll need to define a class that extends the System base class. Let's take a look at an example of registering a system using miniECS.js:
+
 
 ```javascript
 class MovableSystem extends System {
@@ -187,6 +236,7 @@ class MovableSystem extends System {
       position.x += velocity.x * delta;
       position.y += velocity.y * delta;
 
+
       // Wrap around the canvas if the entity goes beyond the bounds
       if (position.x > canvasWidth + SHAPE_HALF_SIZE)
         position.x = -SHAPE_HALF_SIZE;
@@ -200,13 +250,20 @@ class MovableSystem extends System {
   }
 }
 
+
 MovableSystem.prototype.query = queries.movable;
 ```
 The `MovableSystem` class specifies its query by assigning the `queries.movable` array to the query property. This ensures that the system operates only on entities that have the required components (position and velocity).
 
+
 The `getEntities().forEach(...)` line in the code snippet iterates over all the entities that match the specified query. It allows you to perform operations on each relevant entity in the system's update loop.
 
+
+#### System Template
+
+
 Here the `update(delta, time)` method as a template that you can use for your systems :
+
 
 ```javascript
 class ExampleSystem extends System {
@@ -216,20 +273,43 @@ class ExampleSystem extends System {
     });
   }
 }
+ExampleSystem.prototype.query = ['position', 'velocity', 'shape']
 ```
+You can define your queries directly as an array of strings, where each elements correspond at a component that can be added to an entity.
+
 
 ### Updating Systems
 
+
 To update all registered systems, call the `update()` method of the `EntityManager` instance. This will invoke the update method of each registered system, allowing them to process entities.
 
+
 ```javascript
-// Update all registered systems
-entityManager.update(delta, time);
+function run() {
+    // Compute delta and elapsed time
+    let time = performance.now();
+    let delta = time - lastTime;
+
+
+    // Run all the systems
+    world.update(delta, time);
+
+
+    lastTime = time;
+    requestAnimationFrame(run);
+  }
+
+
+  let lastTime = performance.now();
+  run();
 ```
+
 
 ## Usage Example
 
+
 ### miniECS.js Example
+
 
 ```html
 <!DOCTYPE html>
@@ -254,11 +334,13 @@ entityManager.update(delta, time);
   // Create an entity manager
   let world = new EntityManager();
 
+
   // Entities Global
   const NUM_ELEMENTS = 50;
   const SPEED_MULTIPLIER = 0.3;
   const SHAPE_SIZE = 50;
   const SHAPE_HALF_SIZE = SHAPE_SIZE / 2;
+
 
   // Initialize canvas
   let canvas = document.querySelector("canvas");
@@ -266,28 +348,35 @@ entityManager.update(delta, time);
   let canvasHeight = (canvas.height = window.innerHeight);
   let ctx = canvas.getContext("2d");
 
+
   //----------------------
   // Components
   //----------------------
 
+
   // Velocity component
   let velocity = { velocity: { x: 0, y: 0 } };
+
 
   // Position component
   let position = { position: { x: 0, y: 0 } };
 
+
   // Shape component
   let shape = { shape: "box" };
 
+
   // Renderable component from ECSY will be a query for our systems to use:
-  const queries = {
+  let queries = {
     movable: ["position", "velocity"],
     renderable: ["shape"],
   };
 
+
   //----------------------
   // Systems
   //----------------------
+
 
   // MovableSystem
   class MovableSystem extends System {
@@ -298,6 +387,7 @@ entityManager.update(delta, time);
         var position = entity.position;
         position.x += velocity.x * delta;
         position.y += velocity.y * delta;
+
 
         if (position.x > canvasWidth + SHAPE_HALF_SIZE)
           position.x = -SHAPE_HALF_SIZE;
@@ -312,12 +402,14 @@ entityManager.update(delta, time);
   }
   MovableSystem.prototype.query = queries.movable;
 
+
   // RendererSystem
   class RendererSystem extends System {
     // This method will get called on every frame by default
     update(delta, time) {
       ctx.fillStyle = "#d4d4d4";
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
 
       // Iterate through all the entities on the query
       this.getEntities().forEach((entity) => {
@@ -329,6 +421,7 @@ entityManager.update(delta, time);
       });
     }
 
+
     drawCircle(entity) {
       ctx.beginPath();
       ctx.arc(entity.position.x, entity.position.y, SHAPE_HALF_SIZE, 0, 2 * Math.PI, false);
@@ -338,6 +431,7 @@ entityManager.update(delta, time);
       ctx.strokeStyle = "#0b845b";
       ctx.stroke();
     }
+
 
     drawBox(entity) {
       ctx.beginPath();
@@ -356,9 +450,11 @@ entityManager.update(delta, time);
   }
   RendererSystem.prototype.query = queries.renderable;
 
+
   // System registering
   world.registerSystem(new RendererSystem());
   world.registerSystem(new MovableSystem());
+
 
   function getRandomVelocity() {
     return {
@@ -369,6 +465,7 @@ entityManager.update(delta, time);
     };
   }
 
+
   function getRandomPosition() {
     return {
       position: {
@@ -378,31 +475,37 @@ entityManager.update(delta, time);
     };
   }
 
+
   function getRandomShape() {
     return {
       shape: Math.random() >= 0.5 ? "circle" : "box",
     };
   }
 
+
   // Create entities with random positions, velocities, and rendering properties
   for (let i = 0; i < NUM_ELEMENTS; i++) {
     world.createEntity().assign(getRandomPosition(), getRandomVelocity(), getRandomShape());
   }
 
+
   // Run the game loop
   function run() {
     // Compute delta and elapsed time
-    var time = performance.now();
-    var delta = time - lastTime;
+    let time = performance.now();
+    let delta = time - lastTime;
+
 
     // Run all the systems
     world.update(delta, time);
+
 
     lastTime = time;
     requestAnimationFrame(run);
   }
 
-  var lastTime = performance.now();
+
+  let lastTime = performance.now();
   run();
 </script>
 </html>
@@ -423,13 +526,16 @@ entityManager.update(delta, time);
       }
     </style>
 
+
     <script type="module">
       import { World, System, Component, TagComponent, Types } from "https://ecsyjs.github.io/ecsy/build/ecsy.module.js";
+
 
       const NUM_ELEMENTS = 50;
       const SPEED_MULTIPLIER = 0.3;
       const SHAPE_SIZE = 50;
       const SHAPE_HALF_SIZE = SHAPE_SIZE / 2;
+
 
       // Initialize canvas
       let canvas = document.querySelector("canvas");
@@ -437,39 +543,49 @@ entityManager.update(delta, time);
       let canvasHeight = canvas.height = window.innerHeight;
       let ctx = canvas.getContext("2d");
 
+
       //----------------------
       // Components
       //----------------------
 
+
       // Velocity component
       class Velocity extends Component {}
+
 
       Velocity.schema = {
         x: { type: Types.Number },
         y: { type: Types.Number }
       };
 
+
       // Position component
       class Position extends Component {}
+
 
       Position.schema = {
         x: { type: Types.Number },
         y: { type: Types.Number }
       };
 
+
       // Shape component
       class Shape extends Component {}
+
 
       Shape.schema = {
         primitive: { type: Types.String, default: 'box' }
       };
 
+
       // Renderable component
       class Renderable extends TagComponent {}
+
 
       //----------------------
       // Systems
       //----------------------
+
 
       // MovableSystem
       class MovableSystem extends System {
@@ -482,6 +598,7 @@ entityManager.update(delta, time);
             position.x += velocity.x * delta;
             position.y += velocity.y * delta;
 
+
             if (position.x > canvasWidth + SHAPE_HALF_SIZE) position.x = - SHAPE_HALF_SIZE;
             if (position.x < - SHAPE_HALF_SIZE) position.x = canvasWidth + SHAPE_HALF_SIZE;
             if (position.y > canvasHeight + SHAPE_HALF_SIZE) position.y = - SHAPE_HALF_SIZE;
@@ -490,6 +607,7 @@ entityManager.update(delta, time);
         }
       }
 
+
       // Define a query of entities that have "Velocity" and "Position" components
       MovableSystem.queries = {
         moving: {
@@ -497,13 +615,16 @@ entityManager.update(delta, time);
         }
       }
 
+
       // RendererSystem
       class RendererSystem extends System {
         // This method will get called on every frame by default
         execute(delta, time) {
 
+
           ctx.fillStyle = "#d4d4d4";
           ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
 
           // Iterate through all the entities on the query
           this.queries.renderables.results.forEach(entity => {
@@ -517,6 +638,7 @@ entityManager.update(delta, time);
           });
         }
 
+
         drawCircle(position) {
           ctx.beginPath();
           ctx.arc(position.x, position.y, SHAPE_HALF_SIZE, 0, 2 * Math.PI, false);
@@ -526,6 +648,7 @@ entityManager.update(delta, time);
           ctx.strokeStyle = "#0b845b";
           ctx.stroke();
         }
+
 
         drawBox(position) {
           ctx.beginPath();
@@ -538,10 +661,12 @@ entityManager.update(delta, time);
         }
       }
 
+
       // Define a query of entities that have "Renderable" and "Shape" components
       RendererSystem.queries = {
         renderables: { components: [Renderable, Shape] }
       }
+
 
       // Create world and register the components and systems on it
       var world = new World();
@@ -553,6 +678,7 @@ entityManager.update(delta, time);
         .registerSystem(MovableSystem)
         .registerSystem(RendererSystem);
 
+
       // Some helper functions when creating the components
       function getRandomVelocity() {
         return {
@@ -561,6 +687,7 @@ entityManager.update(delta, time);
         };
       }
 
+
       function getRandomPosition() {
         return {
           x: Math.random() * canvasWidth,
@@ -568,11 +695,13 @@ entityManager.update(delta, time);
         };
       }
 
+
       function getRandomShape() {
          return {
            primitive: Math.random() >= 0.5 ? 'circle' : 'box'
          };
       }
+
 
       for (let i = 0; i < NUM_ELEMENTS; i++) {
         world
@@ -583,18 +712,22 @@ entityManager.update(delta, time);
           .addComponent(Renderable)
       }
 
+
       // Run!
       function run() {
         // Compute delta and elapsed time
         var time = performance.now();
         var delta = time - lastTime;
 
+
         // Run all the systems
         world.execute(delta, time);
+
 
         lastTime = time;
         requestAnimationFrame(run);
       }
+
 
       var lastTime = performance.now();
       run();
@@ -607,7 +740,12 @@ entityManager.update(delta, time);
 ```
 ## Contributing
 
+
 Contributions to miniECS.js are welcome!
 ## License
 
+
 miniECS.js is licensed under the MIT License
+
+Document sans titre.txt
+Affichage de Document sans titre.txt en cours...
