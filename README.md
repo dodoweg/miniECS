@@ -10,10 +10,11 @@ To see miniECS.js in action, check out the [example](https://dorweg.github.io/mi
 Here a sample project :
 
 ```javascript
-let world = new EntityManager(); // EntityManager
+// EntityManager
+let world = new EntityManager();
 // Components
 let position = { position: { x: 0, x: 0 } };
-// Queries of Components for Systems
+// Queries for Systems
 let queries = {
   console: ["position"],
 };
@@ -22,16 +23,17 @@ class ConsoleSystem extends System {
  update(delta, time) {
 // Fetch through all entities that got the position component
     this.getEntities().forEach((entity) => { 
-  console.log(entity.position);
+    console.log(entity.position);
     });
   }
 }
-ConsoleSystem.prototype.query = queries.console; // Assign the query 'console' that is a group of only one component, position
+// Assign the query 'console' that is an array of only one component, position
+ConsoleSystem.prototype.query = queries.console;
 
 
 // Registering the system
 world.registerSystem(new ConsoleSystem());
-// Create one entity and assign them the position "components" at the root of entity
+// Create one entity and assign them the position "components" <= i put quotation mark because "position" is also an accessible properties (entity.position)
 world.createEntity().assign(position); 
 
 
@@ -55,8 +57,7 @@ run();
 ```
 
 
-The `ConsoleSystem` in this example is designed to log the `position` component of entities to the console each frame, ensuring that all entities with the `position` component are accounted for.
-
+The `ConsoleSystem` in this example is designed to log the `position` component of  all entities that share the `position` component.
 ## Installation
 
 
@@ -257,6 +258,15 @@ The `MovableSystem` class specifies its query by assigning the `queries.movable`
 
 
 The `getEntities().forEach(...)` line in the code snippet iterates over all the entities that match the specified query. It allows you to perform operations on each relevant entity in the system's update loop.
+
+You can then use the `registerSystem` method from `EntityManager` like this :
+
+
+```javascript
+let world = new EntityManager();
+world.registerSystem(new MovableSystem());
+```
+
 
 
 #### System Template
