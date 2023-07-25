@@ -756,6 +756,3 @@ Contributions to miniECS.js are welcome!
 
 
 miniECS.js is licensed under the MIT License
-
-Document sans titre.txt
-Affichage de Document sans titre.txt en cours...
