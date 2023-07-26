@@ -5,7 +5,7 @@ miniECS.js is a lightweight and streamlined Entity Component System (ECS) librar
 ## Introduction
 
 miniECS.js allows you to define components that encapsulate specific properties of an entity, such as its transform or physics attributes. These components can then be manipulated efficiently within specific systems, promoting a clear separation of concerns and facilitating the management of intricate interactions between entities.
-To see miniECS.js in action, check out the [example](https://dorweg.github.io/miniECS/). I took inspiration from the [ECSY](https://github.com/ecsyjs/ecsy) library and rewrote its example using miniECS.js. At the end of the README file, you can find two usage examples that demonstrate the same initial setup using miniECS.js and ECSY.js.
+To see miniECS.js in action, check out the [example](https://dodoweg.github.io/miniECS/). I took inspiration from the [ECSY](https://github.com/ecsyjs/ecsy) library and rewrote its example using miniECS.js. At the end of the README file, you can find two usage examples that demonstrate the same initial setup using miniECS.js and ECSY.js.
 
 Here a sample project :
 
@@ -65,7 +65,7 @@ To use miniECS.js in your project, you can include the `miniECS.js` script in yo
 
 
 ```html
-<script src="https://dorweg.github.io/miniECS/miniECS.js"></script>
+<script src="https://dodoweg.github.io/miniECS/miniECS.js"></script>
 ```
 
 
@@ -110,16 +110,15 @@ let world = new EntityManager();
 world.createEntity().assign(...transform({ position: { x: 167, y: 200 } }));
 console.log(world.entities[0].position.y); // Output: 200
 ```
-In this example, the transform function creates a component instance with default transformation properties. The function accepts an options parameter to override the default values when assigning the component to an entity.
+
+By passing the `position` property in the options parameter, we can override the default transformation properties for the position.
+However, all other default values for the transform component are preserved.
 
 
 ### Defining Components as Objects
 
 
-Alternatively, you can define components directly as objects. This approach allows you to assign properties to entities without the need for a function wrapper.
-
-
-Here's an example of defining components as objects:
+Alternatively, you can define components directly as objects. This approach allows you to assign properties to entities without the need for a function wrapper like shown above.
 
 
 ```javascript
@@ -224,16 +223,10 @@ To register a system in miniECS.js, you'll need to define a class that extends t
 
 ```javascript
 class MovableSystem extends System {
-  /**
-   * The update method of the MovableSystem class is called on every frame to update the movable entities.
-   *
-   * @param {number} delta - The time elapsed since the last frame.
-   * @param {number} time - The current time.
-   */
   update(delta, time) {
     this.getEntities().forEach((entity) => { 
-      var velocity = entity.velocity;
-      var position = entity.position;
+      let velocity = entity.velocity;
+      let position = entity.position;
       position.x += velocity.x * delta;
       position.y += velocity.y * delta;
 
