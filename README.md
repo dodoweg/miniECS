@@ -145,7 +145,7 @@ Using miniECS.js, you have the flexibility to define components either as functi
 ### Assigning Components to Entities
 
 
-To assign components to an existing entity, you can use the `assign(...components)` method of the `Entity` class. This method allows you to associate various components with the entity by passing them as nested objects.
+To assign components to an existing entity, you can use the `assign(...components)` method of the `Entity` class. This method allows you to associate various components with the entity by passing them as nested objects or by using a function wrapper.
 
 
 Here's an example that demonstrates the usage of the `assign()` method:
